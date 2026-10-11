@@ -2,9 +2,18 @@
 
 An artisan-studio storefront and workshop-booking site built on **WordPress + SQLite**. There is no MySQL: the whole database is one file. Run it in Docker, or directly on PHP.
 
-- **Shop**: 6 handmade products. Each has custom options (glaze/leather swatches, sizes, engraving, gift wrap). The configurator updates the price as you choose, the engraving text appears on the product illustration as you type, and the server checks the price before an item goes in the bag.
+**Live demo:** https://terra-thread-studio.vercel.app
+
+![Terra & Thread Studio home page: a serif headline, "Objects made slowly, by hand.", beside an arched photo of dried poppy seed heads](docs/screenshot-home.webp)
+
+- **Shop**: 6 handmade products. Each has custom options (glaze/leather swatches, sizes, engraving, gift wrap). The configurator updates the price as you choose, shows the chosen finish and your engraving over the product photo as you type, and the server checks the price before an item goes in the bag.
 - **Masterclasses**: 3 workshops with dated sessions and seat counts. You book through a calendar popup that checks capacity on the server so a session can't be oversold, and the confirmation includes an `.ics` calendar file.
 - **Theme**: a custom Full Site Editing block theme in an earthy, editorial style (terracotta, sand and umber colours; Fraunces and Instrument Sans fonts). There is no build step.
+
+<p>
+  <img src="docs/screenshot-product.webp" width="49%" alt="Product configurator for the Ember Vase: glaze swatches, a size menu, carved initials M.O. previewed over the photo, and the price updated to $88">
+  <img src="docs/screenshot-booking.webp" width="49%" alt="Booking calendar for Wheel Throwing Foundations: October 2026 with session days marked, a selected time slot showing 2 of 8 seats left, and the reservation form">
+</p>
 
 ## Quick start (Docker)
 
