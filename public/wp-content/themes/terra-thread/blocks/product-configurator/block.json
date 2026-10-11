@@ -1,0 +1,14 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "terra/product-configurator",
+	"title": "Product Configurator",
+	"category": "terra-thread",
+	"icon": "admin-customizer",
+	"description": "Single-product hero with live preview, custom options, real-time pricing and add-to-bag.",
+	"textdomain": "terra-thread",
+	"usesContext": ["postId", "postType"],
+	"supports": { "html": false, "align": ["wide", "full"], "multiple": false },
+	"viewScript": "tt-configurator",
+	"render": "file:./render.php"
+}

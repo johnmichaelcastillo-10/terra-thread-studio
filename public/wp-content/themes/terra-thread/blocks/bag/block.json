@@ -1,0 +1,12 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "terra/bag",
+	"title": "Shopping Bag",
+	"category": "terra-thread",
+	"icon": "products",
+	"description": "Header bag button with item count and a slide-out bag drawer.",
+	"textdomain": "terra-thread",
+	"supports": { "html": false, "multiple": false },
+	"render": "file:./render.php"
+}

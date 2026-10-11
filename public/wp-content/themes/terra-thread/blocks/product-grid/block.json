@@ -1,0 +1,18 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "terra/product-grid",
+	"title": "Product Grid",
+	"category": "terra-thread",
+	"icon": "grid-view",
+	"description": "Responsive grid of studio products, with optional material filters or related-products mode.",
+	"textdomain": "terra-thread",
+	"attributes": {
+		"count": { "type": "integer", "default": -1 },
+		"showFilters": { "type": "boolean", "default": false },
+		"related": { "type": "boolean", "default": false }
+	},
+	"usesContext": ["postId"],
+	"supports": { "html": false, "align": ["wide", "full"] },
+	"render": "file:./render.php"
+}

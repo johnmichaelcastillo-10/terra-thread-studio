@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "terra/workshop-schedule",
+	"title": "Workshop Schedule",
+	"category": "terra-thread",
+	"icon": "calendar-alt",
+	"description": "Upcoming masterclasses with live seat availability and a booking calendar.",
+	"textdomain": "terra-thread",
+	"attributes": {
+		"limit": { "type": "integer", "default": -1 },
+		"layout": { "type": "string", "enum": ["list", "cards"], "default": "list" }
+	},
+	"supports": { "html": false, "align": ["wide", "full"] },
+	"viewScript": "tt-booking",
+	"render": "file:./render.php"
+}

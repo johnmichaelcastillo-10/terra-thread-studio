@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "terra/art",
+	"title": "Studio Illustration",
+	"category": "terra-thread",
+	"icon": "art",
+	"description": "One of the studio's object illustrations, set on an arched stage.",
+	"textdomain": "terra-thread",
+	"attributes": {
+		"art": { "type": "string", "enum": ["vase", "journal", "bowl", "throw", "board", "candle"], "default": "vase" },
+		"tint": { "type": "string", "default": "" },
+		"shape": { "type": "string", "enum": ["arch", "round", "plain"], "default": "arch" }
+	},
+	"supports": { "html": false, "align": ["wide", "full"] },
+	"render": "file:./render.php"
+}

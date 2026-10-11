@@ -1,0 +1,31 @@
+# Downloaded by bin/setup — never committed
+/.cache/
+/public/wordpress/
+/public/wp-content/plugins/sqlite-database-integration/
+/public/wp-content/db.php
+/public/wp-content/uploads/
+/public/wp-content/upgrade/
+/public/wp-content/languages/
+
+# Static export: rebuild with bin/publish.ps1; local preview builds
+/dist/
+/preview/
+
+# Secrets, Vercel CLI link state and the token `vercel link` writes
+.env
+.env.local
+.vercel/
+
+# Local state
+/backups/
+/database/*
+!/database/.gitkeep
+/config/salts.php
+/logs/*
+!/logs/.gitkeep
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -1,0 +1,14 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "terra/workshop-detail",
+	"title": "Workshop Detail",
+	"category": "terra-thread",
+	"icon": "groups",
+	"description": "Single-workshop hero: instructor, practical details and every upcoming date with seats left.",
+	"textdomain": "terra-thread",
+	"usesContext": ["postId", "postType"],
+	"supports": { "html": false, "align": ["wide", "full"], "multiple": false },
+	"viewScript": "tt-booking",
+	"render": "file:./render.php"
+}
