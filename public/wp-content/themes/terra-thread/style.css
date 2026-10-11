@@ -175,17 +175,8 @@ h1 em, h2 em { font-style: italic; color: var(--tt-clay); font-weight: 300; }
 .tt-icon-btn:disabled { opacity: 0.3; cursor: default; }
 
 /* ==========================================================================
-   Header, announcement, footer
+   Header, footer
    ========================================================================== */
-
-.tt-announce {
-	padding-block: 0.55rem;
-	background: var(--tt-umber);
-	color: var(--tt-linen);
-	font-size: var(--wp--preset--font-size--x-small);
-	letter-spacing: 0.08em;
-}
-.tt-announce p { margin: 0; }
 
 .tt-site-header { position: sticky; top: 0; z-index: 50; }
 .admin-bar .tt-site-header { top: var(--wp-admin--admin-bar--height, 32px); }
