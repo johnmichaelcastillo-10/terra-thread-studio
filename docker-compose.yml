@@ -1,0 +1,28 @@
+name: terra-thread-studio
+
+services:
+  web:
+    build:
+      context: .
+      args:
+        WP_VERSION: "7.1.3"
+        SQLITE_VERSION: "3.1.0"
+    image: terra-thread-studio:local
+    restart: unless-stopped
+    ports:
+      - "${TT_PORT:-8090}:80"
+    environment:
+      # Used by the first-run installer; WordPress itself takes its URL from the request.
+      TT_URL: "http://localhost:${TT_PORT:-8090}"
+    volumes:
+      # Code from the repo, edited live.
+      - ./public/index.php:/var/www/project/public/index.php:ro
+      - ./public/wp-config.php:/var/www/project/public/wp-config.php:ro
+      - ./public/wp-content/themes/terra-thread:/var/www/project/public/wp-content/themes/terra-thread
+      - ./public/wp-content/plugins/terra-thread-core:/var/www/project/public/wp-content/plugins/terra-thread-core
+      - ./bin:/var/www/project/bin:ro
+      # Data, shared with the host tooling (bin/publish.ps1 backs these up and exports from them).
+      - ./public/wp-content/uploads:/var/www/project/public/wp-content/uploads
+      - ./database:/var/www/project/database
+      - ./config:/var/www/project/config
+      - ./logs:/var/www/project/logs

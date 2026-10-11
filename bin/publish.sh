@@ -10,13 +10,26 @@ cd "$ROOT"
 DEPLOY=0; [[ "${1:-}" == "--deploy" ]] && DEPLOY=1
 
 STATIC_URL=""
+TT_PORT=""
 if [[ -f .env ]]; then
   STATIC_URL="$(grep -E '^STATIC_URL=' .env | cut -d= -f2- | tr -d '\r' || true)"
+  TT_PORT="$(grep -E '^TT_PORT=' .env | cut -d= -f2- | tr -d '\r' || true)"
 fi
 
-[[ -f database/terra-thread.sqlite ]] || { echo "No local site yet: run bin/setup.sh first."; exit 1; }
+[[ -f database/terra-thread.sqlite ]] || { echo "No local site yet: run 'docker compose up -d' (or bin/setup.sh) first."; exit 1; }
 
-php bin/roll-dates.php
+# If the Docker site is running, use it (same database and uploads); otherwise start a
+# private host PHP server below.
+DOCKER_UP=0
+if command -v docker >/dev/null && docker compose ps --status running --services 2>/dev/null | grep -qx web; then
+  DOCKER_UP=1
+fi
+
+if [[ $DOCKER_UP -eq 1 ]]; then
+  docker compose exec -T -u www-data web php bin/roll-dates.php
+else
+  php bin/roll-dates.php
+fi
 
 if [[ $DEPLOY -eq 1 ]]; then
   dest="backups/auto-$(date +%Y-%m-%d_%H%M%S)"
@@ -27,14 +40,19 @@ if [[ $DEPLOY -eq 1 ]]; then
   echo "Backed up to $dest"
 fi
 
-# A private server just for the export.
-PORT=8091
-php -S "localhost:$PORT" -t public bin/router.php >/dev/null 2>&1 &
-SERVER=$!
-trap 'kill $SERVER 2>/dev/null || true' EXIT
-for _ in $(seq 1 30); do curl -fs "http://localhost:$PORT/" >/dev/null && break; sleep 1; done
+# Export source: the running Docker site, or a private host server just for the export.
+if [[ $DOCKER_UP -eq 1 ]]; then
+  SOURCE="http://localhost:${TT_PORT:-8090}"
+  echo "Exporting from the Docker site at $SOURCE"
+else
+  SOURCE="http://localhost:8091"
+  php -S "localhost:8091" -t public bin/router.php >/dev/null 2>&1 &
+  SERVER=$!
+  trap 'kill $SERVER 2>/dev/null || true' EXIT
+fi
+for _ in $(seq 1 30); do curl -fs "$SOURCE/" >/dev/null && break; sleep 1; done
 
-args=(bin/export-static.php "--source=http://localhost:$PORT")
+args=(bin/export-static.php "--source=$SOURCE")
 if [[ -n "$STATIC_URL" ]]; then
   args+=("--url=$STATIC_URL")
 else

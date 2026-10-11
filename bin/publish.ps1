@@ -22,9 +22,21 @@ if (Test-Path .env) {
     }
 }
 
-if (-not (Test-Path database\terra-thread.sqlite)) { throw 'No local site yet: run bin\setup.ps1 first.' }
+if (-not (Test-Path database\terra-thread.sqlite)) { throw 'No local site yet: run `docker compose up -d` (or bin\setup.ps1) first.' }
 
-php bin/roll-dates.php
+# If the Docker site is running, use it: it serves the same database and uploads, and its
+# WordPress does the date roll. Otherwise a private host PHP server is started below.
+$dockerUp = $false
+if (Get-Command docker -ErrorAction SilentlyContinue) {
+    $dockerUp = @(docker compose ps --status running --services 2>$null) -contains 'web'
+}
+$sitePort = if ($cfg.TT_PORT) { $cfg.TT_PORT } else { '8090' }
+
+if ($dockerUp) {
+    docker compose exec -T -u www-data web php bin/roll-dates.php
+} else {
+    php bin/roll-dates.php
+}
 if ($LASTEXITCODE -ne 0) { throw 'Could not update workshop dates.' }
 
 if ($Deploy) {
@@ -38,17 +50,24 @@ if ($Deploy) {
     Write-Host "Backed up to $dest"
 }
 
-# A private server just for the export, so it doesn't depend on bin/serve.ps1 running.
-$port = 8091
-$server = Start-Process php -ArgumentList '-S', "localhost:$port", '-t', 'public', 'bin/router.php' -WorkingDirectory $Root -WindowStyle Hidden -PassThru
+# Export source: the running Docker site, or a private host server just for the export
+# (so it doesn't depend on bin/serve.ps1 running).
+$server = $null
+if ($dockerUp) {
+    $source = "http://localhost:$sitePort"
+    Write-Host "Exporting from the Docker site at $source"
+} else {
+    $source = 'http://localhost:8091'
+    $server = Start-Process php -ArgumentList '-S', 'localhost:8091', '-t', 'public', 'bin/router.php' -WorkingDirectory $Root -WindowStyle Hidden -PassThru
+}
 try {
     $up = $false
     for ($i = 0; $i -lt 30 -and -not $up; $i++) {
-        try { Invoke-WebRequest "http://localhost:$port/" -UseBasicParsing -TimeoutSec 5 *> $null; $up = $true } catch { Start-Sleep 1 }
+        try { Invoke-WebRequest "$source/" -UseBasicParsing -TimeoutSec 5 *> $null; $up = $true } catch { Start-Sleep 1 }
     }
-    if (-not $up) { throw "The export server on port $port did not start." }
+    if (-not $up) { throw "The site at $source did not respond." }
 
-    $exportArgs = @('bin/export-static.php', "--source=http://localhost:$port")
+    $exportArgs = @('bin/export-static.php', "--source=$source")
     if ($cfg.STATIC_URL) {
         $exportArgs += "--url=$($cfg.STATIC_URL)"
     } else {
@@ -57,7 +76,7 @@ try {
     php @exportArgs
     if ($LASTEXITCODE -ne 0) { throw 'Static export failed; nothing was deployed.' }
 } finally {
-    Stop-Process -Id $server.Id -Force -ErrorAction SilentlyContinue
+    if ($server) { Stop-Process -Id $server.Id -Force -ErrorAction SilentlyContinue }
 }
 
 if ($Deploy) {

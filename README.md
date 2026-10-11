@@ -1,14 +1,33 @@
 # Terra & Thread Studio
 
-An artisan-studio storefront and workshop-booking site built on **WordPress + SQLite**. You don't need MySQL, Docker or Apache. PHP is the only requirement.
+An artisan-studio storefront and workshop-booking site built on **WordPress + SQLite**. There is no MySQL: the whole database is one file. Run it in Docker, or directly on PHP.
 
 - **Shop**: 6 handmade products. Each has custom options (glaze/leather swatches, sizes, engraving, gift wrap). The configurator updates the price as you choose, the engraving text appears on the product illustration as you type, and the server checks the price before an item goes in the bag.
 - **Masterclasses**: 3 workshops with dated sessions and seat counts. You book through a calendar popup that checks capacity on the server so a session can't be oversold, and the confirmation includes an `.ics` calendar file.
 - **Theme**: a custom Full Site Editing block theme in an earthy, editorial style (terracotta, sand and umber colours; Fraunces and Instrument Sans fonts). There is no build step.
 
-## Quick start
+## Quick start (Docker)
 
-Requirements: PHP 8.1+ with `pdo_sqlite`, `mbstring` and `openssl` enabled. Setup downloads WordPress and the SQLite plugin, so it needs internet access.
+Requirements: Docker Desktop (Windows/macOS) or Docker Engine with Compose v2 (Linux).
+
+```bash
+docker compose up -d            # http://localhost:8090, admin at /wordpress/wp-admin/
+docker compose logs web         # first run: shows the generated admin password
+docker compose down             # stop (your data stays)
+```
+
+One container runs Apache and PHP 8.5, with WordPress 7.1.3 and the SQLite plugin baked into the image. The theme, the core plugin, uploads, `database/`, `config/` and `logs/` are mounted from this folder, so edits show up immediately and the data survives rebuilds. On the first start, with no database yet, the container installs WordPress and seeds the catalogue by itself. Apache gets the same protections as `bin/router.php`, and pretty permalinks.
+
+| Task | Command |
+| --- | --- |
+| Use another port | set `TT_PORT=9000` in `.env`, then `docker compose up -d` |
+| Reset and reseed | `docker compose down`, delete `database/terra-thread.sqlite` and `public/wp-content/uploads/`, then `docker compose up -d` |
+| Rebuild after changing the Dockerfile or versions | `docker compose up -d --build` |
+| Run PHP inside the container | `docker compose exec -u www-data web php <script>` |
+
+## Quick start (PHP on the host)
+
+Requirements: PHP 8.1+ with `pdo_sqlite`, `mbstring` and `openssl` enabled. Setup downloads WordPress and the SQLite plugin, so it needs internet access. Docker and the host server share the same database file, so run only one at a time (both use port 8090).
 
 **Windows (PowerShell)**
 
@@ -48,9 +67,9 @@ WordPress runs only on your computer. Publishing turns it into plain files and u
 
 Each publish:
 
-1. Moves workshop sessions forward by whole weeks if the next one is under 5 days away, so the live schedule is always upcoming.
+1. Moves workshop sessions forward by whole weeks if the next one is under 5 days away, so the live schedule is always upcoming. If the Docker site is running, this runs inside the container.
 2. Backs up the database and uploads to `backups/` (deploy only; the newest 10 are kept).
-3. Exports with `bin/export-static.php`. It crawls a private server on port 8091 and saves pages, assets and self-hosted Google Fonts. It also writes each workshop's seat availability to `/data/workshops/<id>/sessions.json` and adds a Content-Security-Policy that allows inline scripts only by hash. Nothing is published if any page has a PHP warning or a leftover `localhost` link.
+3. Exports with `bin/export-static.php`. It crawls the Docker site if it's running, otherwise a private host server on port 8091, and saves pages, assets and self-hosted Google Fonts. It also writes each workshop's seat availability to `/data/workshops/<id>/sessions.json` and adds a Content-Security-Policy that allows inline scripts only by hash. Nothing is published if any page has a PHP warning or a leftover `localhost` link.
 4. Runs `vercel deploy dist --prod`.
 
 **On the static site**, the scripts run in static mode (`window.ttStudio.static`). Prices are calculated in the browser by the same function that mirrors the PHP pricing engine. Reservations are checked against the exported availability and saved in the visitor's browser, and the confirmation says it is a demo. The full WordPress site, with real bookings in SQLite, is what runs locally.
