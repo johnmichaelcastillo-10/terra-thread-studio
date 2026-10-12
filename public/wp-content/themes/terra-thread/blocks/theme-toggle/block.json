@@ -1,0 +1,12 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "terra/theme-toggle",
+	"title": "Theme Toggle",
+	"category": "terra-thread",
+	"icon": "lightbulb",
+	"description": "Header button that switches between the light and dark theme. Hidden without JavaScript.",
+	"textdomain": "terra-thread",
+	"supports": { "html": false, "multiple": false },
+	"render": "file:./render.php"
+}

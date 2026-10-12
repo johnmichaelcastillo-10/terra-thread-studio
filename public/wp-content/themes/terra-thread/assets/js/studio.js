@@ -322,5 +322,42 @@
 	window.addEventListener('storage', (e) => e.key === KEY && render());
 	render();
 
+	/* ── Light/dark toggle ─────────────────────────────────────────────── */
+
+	// With no choice saved the site follows the system; a choice is stored as "tt-theme" and
+	// applied as data-theme on <html> (before paint, by the inline script in functions.php).
+	// Flipping back to what the system already shows forgets the choice.
+	const THEME_KEY = 'tt-theme';
+	const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+	const themeToggle = document.querySelector('[data-tt-theme-toggle]');
+	const root = document.documentElement;
+	const currentTheme = () =>
+		root.dataset.theme === 'light' || root.dataset.theme === 'dark' ? root.dataset.theme : systemDark.matches ? 'dark' : 'light';
+	const applyTheme = (theme) => {
+		if (theme === 'light' || theme === 'dark') root.dataset.theme = theme;
+		else delete root.dataset.theme;
+		if (themeToggle) {
+			themeToggle.setAttribute('aria-label', currentTheme() === 'dark' ? themeToggle.dataset.labelLight : themeToggle.dataset.labelDark);
+		}
+	};
+
+	if (themeToggle) {
+		themeToggle.addEventListener('click', () => {
+			const next = currentTheme() === 'dark' ? 'light' : 'dark';
+			const followSystem = next === (systemDark.matches ? 'dark' : 'light');
+			try {
+				if (followSystem) localStorage.removeItem(THEME_KEY);
+				else localStorage.setItem(THEME_KEY, next);
+			} catch {
+				/* Not remembered; this page still switches. */
+			}
+			applyTheme(followSystem ? null : next);
+		});
+		systemDark.addEventListener('change', () => applyTheme(root.dataset.theme));
+		window.addEventListener('storage', (e) => e.key === THEME_KEY && applyTheme(e.newValue));
+		applyTheme(root.dataset.theme);
+		themeToggle.hidden = false;
+	}
+
 	window.TT = { money, api, el, bag, openBag, wireDialog, quote, normaliseText, products, isStatic: Boolean(cfg.static) };
 })();

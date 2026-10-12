@@ -37,6 +37,64 @@ Tags: block-theme, full-site-editing, e-commerce, minimal, editorial
 	--tt-ease: cubic-bezier(0.22, 1, 0.36, 1);
 	--tt-shadow: 0 1px 2px rgb(43 33 27 / 0.04), 0 12px 32px -12px rgb(43 33 27 / 0.18);
 	--tt-header-h: 76px;
+
+	--tt-error: #A3311E;
+	/* The footer stays dark in both themes, so it has its own colours. */
+	--tt-footer-bg: var(--tt-umber);
+	--tt-footer-ink: var(--tt-linen);
+	--tt-footer-link: var(--tt-parchment);
+	--tt-footer-muted: var(--tt-stone);
+	--tt-icon-sun: none;
+	--tt-icon-moon: block;
+	color-scheme: light;
+}
+
+/* Dark: follows the system unless the header toggle chose a theme (data-theme on <html>,
+   set before paint by functions.php). The palette keeps its roles: umber is still the ink
+   and the solid fill, parchment the card surface, sand the page. Both blocks must stay
+   identical. */
+@media (prefers-color-scheme: dark) {
+	:root:root:not([data-theme="light"]) {
+		--wp--preset--color--parchment: #241D17;
+		--wp--preset--color--sand: #1A1511;
+		--wp--preset--color--linen: #2F271F;
+		--wp--preset--color--stone: #7A6B5D;
+		--wp--preset--color--clay: #D9805F;
+		--wp--preset--color--clay-deep: #E8A184;
+		--wp--preset--color--sage: #A8B693;
+		--wp--preset--color--bark: #BCAE9E;
+		--wp--preset--color--umber: #EFE6DA;
+		--tt-error: #EE8A73;
+		--tt-footer-bg: #110D0A;
+		--tt-footer-ink: #D8CBB9;
+		--tt-footer-link: #F3EBDF;
+		--tt-footer-muted: #A3937F;
+		--tt-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 12px 32px -12px rgb(0 0 0 / 0.6);
+		--tt-icon-sun: block;
+		--tt-icon-moon: none;
+		color-scheme: dark;
+	}
+}
+
+:root:root[data-theme="dark"] {
+	--wp--preset--color--parchment: #241D17;
+	--wp--preset--color--sand: #1A1511;
+	--wp--preset--color--linen: #2F271F;
+	--wp--preset--color--stone: #7A6B5D;
+	--wp--preset--color--clay: #D9805F;
+	--wp--preset--color--clay-deep: #E8A184;
+	--wp--preset--color--sage: #A8B693;
+	--wp--preset--color--bark: #BCAE9E;
+	--wp--preset--color--umber: #EFE6DA;
+	--tt-error: #EE8A73;
+	--tt-footer-bg: #110D0A;
+	--tt-footer-ink: #D8CBB9;
+	--tt-footer-link: #F3EBDF;
+	--tt-footer-muted: #A3937F;
+	--tt-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 12px 32px -12px rgb(0 0 0 / 0.6);
+	--tt-icon-sun: block;
+	--tt-icon-moon: none;
+	color-scheme: dark;
 }
 
 /* ==========================================================================
@@ -246,31 +304,52 @@ h1 em, h2 em { font-style: italic; color: var(--tt-clay); font-weight: 300; }
 }
 .tt-bag__count.is-empty { background: var(--tt-linen); color: var(--tt-bark); }
 
+/* Light/dark toggle (block terra/theme-toggle, run by assets/js/studio.js). Shows the theme
+   it switches to. */
+.tt-theme-toggle {
+	display: inline-grid;
+	place-items: center;
+	width: 2.5rem;
+	height: 2.5rem;
+	padding: 0;
+	border: 1px solid var(--tt-rule-strong);
+	border-radius: 50%;
+	background: transparent;
+	color: var(--tt-umber);
+	cursor: pointer;
+	transition: border-color 0.2s, background 0.2s;
+}
+.tt-theme-toggle[hidden] { display: none; }
+.tt-theme-toggle:hover { border-color: var(--tt-umber); background: var(--tt-parchment); }
+.tt-theme-toggle svg { width: 1.1rem; height: 1.1rem; }
+.tt-theme-toggle .icon-moon { display: var(--tt-icon-moon); }
+.tt-theme-toggle .icon-sun { display: var(--tt-icon-sun); }
+
 .tt-footer {
 	margin-top: var(--wp--preset--spacing--70);
 	padding-block: var(--wp--preset--spacing--60) var(--wp--preset--spacing--40);
-	background: var(--tt-umber);
-	color: var(--tt-linen);
+	background: var(--tt-footer-bg);
+	color: var(--tt-footer-ink);
 	font-size: var(--wp--preset--font-size--small);
 }
-.tt-footer a { color: var(--tt-parchment); text-decoration: none; }
-.tt-footer a:hover { color: var(--tt-stone); }
-.tt-footer .wp-block-site-title a { color: var(--tt-parchment); font-size: 2rem; }
-.tt-footer__blurb { max-width: 34ch; color: var(--tt-stone); }
+.tt-footer a { color: var(--tt-footer-link); text-decoration: none; }
+.tt-footer a:hover { color: var(--tt-footer-muted); }
+.tt-footer .wp-block-site-title a { color: var(--tt-footer-link); font-size: 2rem; }
+.tt-footer__blurb { max-width: 34ch; color: var(--tt-footer-muted); }
 .tt-footer__heading {
 	font-family: var(--tt-sans);
 	font-size: var(--wp--preset--font-size--x-small);
 	font-weight: 600;
 	letter-spacing: 0.18em;
 	text-transform: uppercase;
-	color: var(--tt-stone);
+	color: var(--tt-footer-muted);
 }
 .tt-footer__links { list-style: none; padding: 0; display: grid; gap: 0.4rem; }
 .tt-footer__base {
 	margin-top: var(--wp--preset--spacing--60);
 	padding-top: var(--wp--preset--spacing--40);
-	border-top: 1px solid color-mix(in srgb, var(--tt-linen) 16%, transparent);
-	color: var(--tt-stone);
+	border-top: 1px solid color-mix(in srgb, var(--tt-footer-ink) 16%, transparent);
+	color: var(--tt-footer-muted);
 	font-size: var(--wp--preset--font-size--x-small);
 	letter-spacing: 0.06em;
 }
@@ -605,7 +684,7 @@ h1 em, h2 em { font-style: italic; color: var(--tt-clay); font-weight: 300; }
 .tt-field__head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
 .tt-field__price { font-size: var(--wp--preset--font-size--small); color: var(--tt-clay-deep); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .tt-field__meta { display: flex; justify-content: space-between; gap: 1rem; }
-.tt-field__error { margin: 0; font-size: var(--wp--preset--font-size--small); color: #A3311E; }
+.tt-field__error { margin: 0; font-size: var(--wp--preset--font-size--small); color: var(--tt-error); }
 .tt-optional { font-weight: 400; color: var(--tt-bark); font-size: 0.8em; }
 .tt-counter { font-size: var(--wp--preset--font-size--x-small); color: var(--tt-bark); font-variant-numeric: tabular-nums; }
 
@@ -643,7 +722,7 @@ h1 em, h2 em { font-style: italic; color: var(--tt-clay); font-weight: 300; }
 .tt-options input[type="text"]:focus,
 .tt-book__form input:focus,
 .tt-select select:focus { outline: none; border-color: var(--tt-umber); box-shadow: 0 0 0 3px color-mix(in srgb, var(--tt-clay) 20%, transparent); }
-.tt-options input[aria-invalid="true"] { border-color: #A3311E; }
+.tt-options input[aria-invalid="true"] { border-color: var(--tt-error); }
 .tt-select { position: relative; }
 .tt-select::after {
 	content: "";
@@ -720,7 +799,7 @@ h1 em, h2 em { font-style: italic; color: var(--tt-clay); font-weight: 300; }
 .tt-breakdown__lines li.is-total { border: 0; font-weight: 600; }
 
 .tt-form-status { margin: 0; min-height: 1.4em; font-size: var(--wp--preset--font-size--small); color: var(--tt-sage); }
-.tt-form-status.is-error { color: #A3311E; }
+.tt-form-status.is-error { color: var(--tt-error); }
 
 .tt-specs { margin: 2rem 0 0; padding: 0; border-top: 1px solid var(--tt-rule); }
 .tt-specs > div { display: grid; grid-template-columns: 9rem 1fr; gap: 1rem; padding: 0.9rem 0; border-bottom: 1px solid var(--tt-rule); font-size: var(--wp--preset--font-size--small); }

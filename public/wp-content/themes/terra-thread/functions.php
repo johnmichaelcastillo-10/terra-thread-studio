@@ -22,6 +22,18 @@ add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\enqueue_editor' );
 add_filter( 'wp_resource_hints', __NAMESPACE__ . '\font_preconnect', 10, 2 );
 add_filter( 'block_categories_all', __NAMESPACE__ . '\block_category' );
 add_action( 'wp_head', __NAMESPACE__ . '\favicon', 2 );
+add_action( 'wp_head', __NAMESPACE__ . '\theme_before_paint', 0 );
+
+/**
+ * A theme chosen with the header toggle applies before first paint, so a dark choice never
+ * flashes light. Blocking and inline on purpose; the static exporter hashes it into the CSP.
+ * studio.js reads and writes the same key.
+ */
+function theme_before_paint(): void {
+	wp_print_inline_script_tag(
+		"try{var t=localStorage.getItem('tt-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}"
+	);
+}
 
 // Every current browser renders emoji natively; WordPress's emoji loader also starts a
 // blob: worker that the static site's Content-Security-Policy blocks.
