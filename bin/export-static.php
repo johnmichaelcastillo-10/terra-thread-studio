@@ -263,7 +263,13 @@ while ( $queue ) {
 echo 'assets ' . count( $done ) . " files\n";
 
 // Google Fonts, self-hosted: the stylesheet (as served to a current browser, so woff2) and
-// every font file it points at.
+// every font file it points at. The Latin files (what every page renders) are preloaded,
+// keyed by style: without that the browser found them only after fonts.css, the headline
+// swapped fonts late and shifted the page (Lighthouse CLS 0.18 on the home page).
+$font_preloads = array(
+	'normal' => array(),
+	'italic' => array(),
+);
 if ( $fonts_url ) {
 	[ $status, $css ] = fetch( $fonts_url, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36' );
 	if ( 200 !== $status ) {
@@ -282,6 +288,16 @@ if ( $fonts_url ) {
 		}
 		write_file( "$out/assets/fonts/fonts.css", $css );
 		echo 'fonts  ' . count( array_unique( $m[1] ) ) . " files\n";
+		preg_match_all( '#/\* latin \*/\s*@font-face\s*\{([^}]*)\}#', $css, $faces );
+		foreach ( $faces[1] as $face ) {
+			$style = preg_match( '#font-style:\s*italic#', $face ) ? 'italic' : 'normal';
+			if ( preg_match( '#url\((/assets/fonts/[^)]+\.woff2)\)#', $face, $u ) ) {
+				$font_preloads[ $style ][ $u[1] ] = true;
+			}
+		}
+		if ( ! $font_preloads['normal'] ) {
+			$errors[] = 'no Latin font faces found in the Google Fonts stylesheet to preload';
+		}
 	}
 }
 
@@ -350,6 +366,16 @@ foreach ( $it as $f ) {
 	$html = preg_replace( '#<meta name="generator"[^>]*>\s*#i', '', $html );
 	if ( $fonts_url ) {
 		$html = preg_replace( '#https://fonts\.googleapis\.com/css2\?[^"\']+#', $source . '/assets/fonts/fonts.css', $html );
+		// The italic face only where a headline has an italic word (the home page's "by
+		// hand."): preloaded on pages that don't use it, it only competes for bandwidth.
+		$styles = preg_match( '#<h[12]\b[^>]*>(?:(?!</h[12]>).)*<em\b#is', $html ) ? array( 'normal', 'italic' ) : array( 'normal' );
+		$links  = '';
+		foreach ( $styles as $style ) {
+			foreach ( array_keys( $font_preloads[ $style ] ) as $font ) {
+				$links .= '<link rel="preload" href="' . $source . $font . '" as="font" type="font/woff2" crossorigin>' . "\n";
+			}
+		}
+		$html = preg_replace( '#<head\b[^>]*>\s*#i', "$0$links", $html, 1 );
 	}
 	// Static mode for the theme's scripts: no REST API on a static host.
 	if ( str_contains( $html, 'window.ttStudio' ) ) {

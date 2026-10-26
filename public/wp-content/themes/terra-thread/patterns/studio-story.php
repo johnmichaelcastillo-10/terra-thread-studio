@@ -10,7 +10,7 @@
 <div class="wp-block-group alignfull tt-story"><!-- wp:columns {"align":"wide","verticalAlignment":"center","className":"tt-story__cols"} -->
 <div class="wp-block-columns alignwide are-vertically-aligned-center tt-story__cols"><!-- wp:column {"verticalAlignment":"center","width":"42%"} -->
 <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:42%"><!-- wp:image {"sizeSlug":"full","linkDestination":"none","className":"tt-arch-photo"} -->
-<figure class="wp-block-image size-full tt-arch-photo"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/studio.jpg' ) ); ?>" alt="<?php esc_attr_e( 'Studio shelves stacked with unglazed cups, jugs and bowls waiting for the kiln', 'terra-thread' ); ?>" loading="lazy"/></figure>
+<figure class="wp-block-image size-full tt-arch-photo"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/studio.webp' ) ); ?>" alt="<?php esc_attr_e( 'Studio shelves stacked with unglazed cups, jugs and bowls waiting for the kiln', 'terra-thread' ); ?>" width="960" height="640" loading="lazy"/></figure>
 <!-- /wp:image --></div>
 <!-- /wp:column -->
 

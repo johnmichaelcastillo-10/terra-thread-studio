@@ -14,6 +14,8 @@ if ( ! Theme\core_ready() ) {
 
 $tt_workshops = \TerraThread\Core\Bookings\upcoming_workshops( (int) $attributes['limit'] );
 $tt_layout    = 'cards' === $attributes['layout'] ? 'cards' : 'list';
+// h2 right under the page's h1 (the masterclass archive), h3 under a section heading (home).
+$tt_heading   = 2 === (int) ( $attributes['headingLevel'] ?? 3 ) ? 'h2' : 'h3';
 ?>
 <div <?php echo get_block_wrapper_attributes( array( 'class' => 'tt-schedule tt-schedule--' . $tt_layout ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>>
 	<?php if ( ! $tt_workshops ) : ?>
@@ -29,7 +31,7 @@ $tt_layout    = 'cards' === $attributes['layout'] ? 'cards' : 'list';
 		?>
 		<article class="tt-workshop">
 			<a class="tt-workshop__media" href="<?php echo esc_url( $tt_w['url'] ); ?>" tabindex="-1" aria-hidden="true">
-				<?php echo Theme\media( $tt_w, 'tt-portrait', array( 'alt' => '', 'sizes' => '(max-width: 781px) 100vw, 400px' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+				<?php echo Theme\media( $tt_w, 'tt-portrait', array( 'alt' => '', 'sizes' => '(max-width: 781px) 100vw, 400px' ) + Theme\secondary_image_attrs( 'h2' === $tt_heading ? 2 : 3 ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 			</a>
 			<a class="tt-workshop__date" href="<?php echo esc_url( $tt_w['url'] ); ?>" tabindex="-1" aria-hidden="true">
 				<span class="tt-workshop__month"><?php echo esc_html( wp_date( 'M', $tt_start ) ); ?></span>
@@ -39,7 +41,7 @@ $tt_layout    = 'cards' === $attributes['layout'] ? 'cards' : 'list';
 
 			<div class="tt-workshop__body">
 				<p class="tt-eyebrow"><?php echo esc_html( $tt_w['level'] ); ?> · <?php echo esc_html( Theme\duration_label( $tt_w['duration'] ) ); ?></p>
-				<h3 class="tt-workshop__title"><a href="<?php echo esc_url( $tt_w['url'] ); ?>"><?php echo esc_html( $tt_w['title'] ); ?></a></h3>
+				<<?php echo $tt_heading; // phpcs:ignore WordPress.Security.EscapeOutput -- h2 or h3. ?> class="tt-workshop__title"><a href="<?php echo esc_url( $tt_w['url'] ); ?>"><?php echo esc_html( $tt_w['title'] ); ?></a></<?php echo $tt_heading; // phpcs:ignore WordPress.Security.EscapeOutput ?>>
 				<p class="tt-workshop__meta">
 					<?php
 					/* translators: %s: instructor name */

@@ -21,8 +21,8 @@ $tt_values = array(
 <p class="tt-value__num"><?php echo esc_html( sprintf( '%02d', $tt_i + 1 ) ); ?></p>
 <!-- /wp:paragraph -->
 
-<!-- wp:heading {"level":3,"className":"tt-value__title"} -->
-<h3 class="wp-block-heading tt-value__title"><?php echo esc_html( $tt_title ); ?></h3>
+<!-- wp:heading {"className":"tt-value__title"} -->
+<h2 class="wp-block-heading tt-value__title"><?php echo esc_html( $tt_title ); ?></h2>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->

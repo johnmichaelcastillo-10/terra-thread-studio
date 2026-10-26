@@ -12,7 +12,7 @@ An artisan-studio storefront and workshop-booking site built on **WordPress + SQ
 
 <p>
   <img src="docs/screenshot-product.webp" width="49%" alt="Product configurator for the Ember Vase: glaze swatches, a size menu, carved initials M.O. previewed over the photo, and the price updated to $88">
-  <img src="docs/screenshot-booking.webp" width="49%" alt="Booking calendar for Wheel Throwing Foundations: October 2026 with session days marked, a selected time slot showing 2 of 8 seats left, and the reservation form">
+  <img src="docs/screenshot-booking.webp" width="49%" alt="Booking calendar for Wheel Throwing Foundations: the month with session days marked, a selected time slot showing the seats left, and the reservation form">
 </p>
 
 ## Quick start (Docker)

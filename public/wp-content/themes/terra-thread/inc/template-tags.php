@@ -82,6 +82,16 @@ function media( array $record, string $size = 'tt-portrait', array $attrs = arra
 	return art( $record['art'] ?? 'vase', $tint, $extra );
 }
 
+/**
+ * Photos in a grid that sits under a section heading (heading level 3: the home page's shop
+ * and masterclass rows, related products) are below the page's main image, but close enough
+ * that the browser fetches them at once even when lazy. Low priority keeps them from
+ * starving the main image: the product page went from 89 to 98 in Lighthouse (2026-10-26).
+ */
+function secondary_image_attrs( int $level ): array {
+	return 3 === $level ? array( 'fetchpriority' => 'low' ) : array();
+}
+
 function stock_badge( int $stock ): string {
 	if ( $stock < 1 ) {
 		return '<span class="tt-badge tt-badge--muted">' . esc_html__( 'Sold out', 'terra-thread' ) . '</span>';
@@ -93,21 +103,29 @@ function stock_badge( int $stock ): string {
 	return '';
 }
 
-function product_card( array $p ): string {
+/**
+ * $level: the card title's heading level. 2 where the grid sits right under the page's h1
+ * (shop and material archives), 3 under a section heading (home, related products), so the
+ * outline never skips a level. A level-3 grid is secondary content further down the page,
+ * so its photos are fetched at low priority (see secondary_image_attrs()).
+ */
+function product_card( array $p, int $level = 3 ): string {
 	$material = $p['materials'] ? reset( $p['materials'] ) : '';
+	$tag      = 2 === $level ? 'h2' : 'h3';
+	$img      = array( 'sizes' => '(max-width: 560px) 100vw, (max-width: 900px) 50vw, 420px', 'alt' => '' ) + secondary_image_attrs( $level );
 
 	ob_start();
 	?>
 	<article class="tt-card">
 		<a class="tt-card__media" href="<?php echo esc_url( $p['url'] ); ?>" tabindex="-1" aria-hidden="true">
-			<?php echo media( $p, 'tt-portrait', array( 'sizes' => '(max-width: 560px) 100vw, (max-width: 900px) 50vw, 420px', 'alt' => '' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+			<?php echo media( $p, 'tt-portrait', $img ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 			<?php echo stock_badge( $p['stock'] ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 		</a>
 		<div class="tt-card__body">
 			<?php if ( $material ) : ?>
 				<p class="tt-eyebrow"><?php echo esc_html( $material ); ?></p>
 			<?php endif; ?>
-			<h3 class="tt-card__title"><a href="<?php echo esc_url( $p['url'] ); ?>"><?php echo esc_html( $p['title'] ); ?></a></h3>
+			<<?php echo $tag; // phpcs:ignore WordPress.Security.EscapeOutput -- h2 or h3. ?> class="tt-card__title"><a href="<?php echo esc_url( $p['url'] ); ?>"><?php echo esc_html( $p['title'] ); ?></a></<?php echo $tag; // phpcs:ignore WordPress.Security.EscapeOutput ?>>
 			<p class="tt-card__excerpt"><?php echo esc_html( $p['excerpt'] ); ?></p>
 			<p class="tt-card__price">
 				<?php if ( $p['options'] ) : ?><span class="tt-card__from"><?php esc_html_e( 'from', 'terra-thread' ); ?></span><?php endif; ?>

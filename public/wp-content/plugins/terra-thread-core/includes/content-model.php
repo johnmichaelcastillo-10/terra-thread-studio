@@ -17,6 +17,9 @@ const MATERIAL = 'tt_material';
  */
 function register_image_sizes(): void {
 	add_image_size( 'tt-portrait', 960, 1200, true );
+	// Same 4:5 crop, so it joins tt-portrait's srcset: a phone card (100vw at ~1.75x, about
+	// 720px) takes this instead of the 960px file.
+	add_image_size( 'tt-portrait-md', 768, 960, true );
 	add_image_size( 'tt-thumb', 240, 300, true );
 }
 

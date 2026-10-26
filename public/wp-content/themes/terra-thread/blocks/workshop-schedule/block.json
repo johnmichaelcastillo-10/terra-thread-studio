@@ -9,7 +9,8 @@
 	"textdomain": "terra-thread",
 	"attributes": {
 		"limit": { "type": "integer", "default": -1 },
-		"layout": { "type": "string", "enum": ["list", "cards"], "default": "list" }
+		"layout": { "type": "string", "enum": ["list", "cards"], "default": "list" },
+		"headingLevel": { "type": "integer", "enum": [2, 3], "default": 3 }
 	},
 	"supports": { "html": false, "align": ["wide", "full"] },
 	"viewScript": "tt-booking",

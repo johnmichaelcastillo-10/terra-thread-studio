@@ -33,6 +33,14 @@ add_action( 'rest_api_init', __NAMESPACE__ . '\Rest\register_routes' );
 // The users sitemap lists author archives, which would publish the admin username.
 add_filter( 'wp_sitemaps_add_provider', fn( $provider, $name ) => 'users' === $name ? false : $provider, 10, 2 );
 
+// Resized copies of JPEG photos are saved as WebP (the original stays JPEG). Textured photos
+// like the linen throw stayed ~480 KB as a JPEG card image and starved the product page's
+// main photo (Lighthouse LCP 5.3 s). Existing uploads: php bin/regenerate-images.php.
+add_filter( 'image_editor_output_format', fn( array $formats ) => $formats + array( 'image/jpeg' => 'image/webp' ) );
+// WordPress's WebP default (86) left the linen throw bigger than its JPEG; 75 looks the same
+// on these photos and roughly halves most of them.
+add_filter( 'wp_editor_set_quality', fn( int $quality, string $mime ) => 'image/webp' === $mime ? 75 : $quality, 10, 2 );
+
 register_activation_hook(
 	__FILE__,
 	function () {

@@ -39,6 +39,8 @@ Tags: block-theme, full-site-editing, e-commerce, minimal, editorial
 	--tt-header-h: 76px;
 
 	--tt-error: #A3311E;
+	/* Sage text small enough to need 4.5:1 (seat counts, form status); the sage itself is for dots. */
+	--tt-sage-ink: #58664A;
 	/* The footer stays dark in both themes, so it has its own colours. */
 	--tt-footer-bg: var(--tt-umber);
 	--tt-footer-ink: var(--tt-linen);
@@ -65,6 +67,7 @@ Tags: block-theme, full-site-editing, e-commerce, minimal, editorial
 		--wp--preset--color--bark: #BCAE9E;
 		--wp--preset--color--umber: #EFE6DA;
 		--tt-error: #EE8A73;
+		--tt-sage-ink: #A8B693;
 		--tt-footer-bg: #110D0A;
 		--tt-footer-ink: #D8CBB9;
 		--tt-footer-link: #F3EBDF;
@@ -87,6 +90,7 @@ Tags: block-theme, full-site-editing, e-commerce, minimal, editorial
 	--wp--preset--color--bark: #BCAE9E;
 	--wp--preset--color--umber: #EFE6DA;
 	--tt-error: #EE8A73;
+	--tt-sage-ink: #A8B693;
 	--tt-footer-bg: #110D0A;
 	--tt-footer-ink: #D8CBB9;
 	--tt-footer-link: #F3EBDF;
@@ -539,7 +543,7 @@ h1 em, h2 em { font-style: italic; color: var(--tt-clay); font-weight: 300; }
 .tt-value { padding: 1.75rem 1.5rem 1.75rem 0; }
 .tt-value + .tt-value { padding-left: 1.5rem; border-left: 1px solid var(--tt-rule); }
 .tt-value p { margin: 0; color: var(--tt-bark); font-size: var(--wp--preset--font-size--small); }
-.tt-value__num { font-family: var(--tt-display); color: var(--tt-clay) !important; font-size: 0.95rem !important; margin-bottom: 0.75rem !important; }
+.tt-value__num { font-family: var(--tt-display); color: var(--tt-clay-deep) !important; font-size: 0.95rem !important; margin-bottom: 0.75rem !important; }
 .tt-value__title { margin: 0 0 0.35rem; font-size: 1.35rem; }
 
 .tt-story {
@@ -798,7 +802,7 @@ h1 em, h2 em { font-style: italic; color: var(--tt-clay); font-weight: 300; }
 .tt-breakdown__lines li span:last-child { font-variant-numeric: tabular-nums; color: var(--tt-umber); }
 .tt-breakdown__lines li.is-total { border: 0; font-weight: 600; }
 
-.tt-form-status { margin: 0; min-height: 1.4em; font-size: var(--wp--preset--font-size--small); color: var(--tt-sage); }
+.tt-form-status { margin: 0; min-height: 1.4em; font-size: var(--wp--preset--font-size--small); color: var(--tt-sage-ink); }
 .tt-form-status.is-error { color: var(--tt-error); }
 
 .tt-specs { margin: 2rem 0 0; padding: 0; border-top: 1px solid var(--tt-rule); }
@@ -876,11 +880,11 @@ h1 em, h2 em { font-style: italic; color: var(--tt-clay); font-weight: 300; }
 .tt-workshop__price { margin: 0; font: 400 1.6rem/1 var(--tt-display); }
 .tt-workshop__price span { font: 400 var(--wp--preset--font-size--x-small) var(--tt-sans); letter-spacing: 0.06em; color: var(--tt-bark); }
 
-.tt-seats { display: inline-flex; align-items: center; gap: 0.6rem; font-size: var(--wp--preset--font-size--x-small); font-weight: 600; letter-spacing: 0.04em; color: var(--tt-sage); }
+.tt-seats { display: inline-flex; align-items: center; gap: 0.6rem; font-size: var(--wp--preset--font-size--x-small); font-weight: 600; letter-spacing: 0.04em; color: var(--tt-sage-ink); }
 .tt-seats__dots { display: inline-flex; gap: 3px; }
 .tt-seats__dots i { width: 7px; height: 7px; border-radius: 50%; border: 1px solid currentColor; }
 .tt-seats__dots i.is-taken { background: currentColor; opacity: 0.35; border-color: transparent; }
-.tt-seats.is-low { color: var(--tt-clay); }
+.tt-seats.is-low { color: var(--tt-clay-deep); }
 .tt-seats.is-sold-out { color: var(--tt-bark); }
 
 .tt-workshop-detail { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr); gap: var(--wp--preset--spacing--60); align-items: start; }
@@ -1034,8 +1038,8 @@ button.tt-cal__day.is-selected i { background: var(--tt-parchment); }
 .tt-slot.is-selected { border-color: var(--tt-umber); box-shadow: inset 0 0 0 1px var(--tt-umber); }
 .tt-slot:disabled { opacity: 0.5; cursor: not-allowed; }
 .tt-slot__time { font-weight: 600; font-size: var(--wp--preset--font-size--small); }
-.tt-slot__seats { font-size: var(--wp--preset--font-size--x-small); color: var(--tt-sage); font-weight: 600; }
-.tt-slot__seats.is-low { color: var(--tt-clay); }
+.tt-slot__seats { font-size: var(--wp--preset--font-size--x-small); color: var(--tt-sage-ink); font-weight: 600; }
+.tt-slot__seats.is-low { color: var(--tt-clay-deep); }
 
 .tt-book__form { display: grid; gap: 1rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--tt-rule); animation: tt-fade-in 0.3s var(--tt-ease); }
 .tt-book__form[hidden] { display: none; }

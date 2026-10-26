@@ -23,6 +23,36 @@ add_filter( 'wp_resource_hints', __NAMESPACE__ . '\font_preconnect', 10, 2 );
 add_filter( 'block_categories_all', __NAMESPACE__ . '\block_category' );
 add_action( 'wp_head', __NAMESPACE__ . '\favicon', 2 );
 add_action( 'wp_head', __NAMESPACE__ . '\theme_before_paint', 0 );
+add_action( 'wp_head', __NAMESPACE__ . '\meta_description', 1 );
+
+/**
+ * One meta description per page, for search snippets (Lighthouse SEO flagged every page
+ * without one). Products, workshops and pages use their excerpt; the rest have fixed copy.
+ * Post type names are literal so this still works if the core plugin is off.
+ */
+function meta_description(): void {
+	if ( is_404() || is_search() ) {
+		return;
+	}
+	$text = '';
+	if ( is_front_page() ) {
+		$text = __( 'Wheel-thrown ceramics, saddle-stitched leather and plant-dyed linen from our studio, plus small-group masterclasses where you learn from the makers themselves.', 'terra-thread' );
+	} elseif ( is_singular() ) {
+		$text = get_the_excerpt( get_queried_object() );
+	} elseif ( is_post_type_archive( 'tt_product' ) ) {
+		$text = __( 'Handmade ceramics, leather, linen and woodwork from the Terra & Thread studio. Personalise a piece and see the price as you choose.', 'terra-thread' );
+	} elseif ( is_post_type_archive( 'tt_workshop' ) ) {
+		$text = __( 'Small-group masterclasses at the Terra & Thread studio: pick a date, see the seats left and reserve your place.', 'terra-thread' );
+	} elseif ( is_tax() ) {
+		$term = get_queried_object();
+		/* translators: %s: material name, e.g. Ceramics */
+		$text = '' !== trim( $term->description ) ? $term->description : sprintf( __( '%s pieces made by hand at the Terra & Thread studio.', 'terra-thread' ), $term->name );
+	}
+	$text = trim( html_entity_decode( wp_strip_all_tags( (string) $text ), ENT_QUOTES, 'UTF-8' ) );
+	if ( '' !== $text ) {
+		printf( '<meta name="description" content="%s" />' . "\n", esc_attr( wp_html_excerpt( $text, 300, '…' ) ) );
+	}
+}
 
 /**
  * A theme chosen with the header toggle applies before first paint, so a dark choice never

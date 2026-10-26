@@ -52,7 +52,7 @@ $tt_products = array_filter( array_map( '\TerraThread\Core\Catalog\product', get
 	<?php if ( $tt_products ) : ?>
 		<div class="tt-grid">
 			<?php foreach ( $tt_products as $tt_product ) : ?>
-				<?php echo Theme\product_card( $tt_product ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+				<?php echo Theme\product_card( $tt_product, (int) ( $attributes['headingLevel'] ?? 3 ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 			<?php endforeach; ?>
 		</div>
 	<?php else : ?>

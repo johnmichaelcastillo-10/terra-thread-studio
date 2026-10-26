@@ -10,7 +10,8 @@
 	"attributes": {
 		"count": { "type": "integer", "default": -1 },
 		"showFilters": { "type": "boolean", "default": false },
-		"related": { "type": "boolean", "default": false }
+		"related": { "type": "boolean", "default": false },
+		"headingLevel": { "type": "integer", "enum": [2, 3], "default": 3 }
 	},
 	"usesContext": ["postId"],
 	"supports": { "html": false, "align": ["wide", "full"] },

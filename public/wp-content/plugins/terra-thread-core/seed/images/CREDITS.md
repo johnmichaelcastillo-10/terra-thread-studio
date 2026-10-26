@@ -16,6 +16,6 @@ not reachable from the build machine); Wikimedia Commons photos are 1920px rende
 | `wheel-throwing-foundations.jpg` | https://stocksnap.io/photo/people-hand-YCQ48YHIVO | CC0 | yugixel |
 | `leather-journal-binding.jpg` | https://commons.wikimedia.org/wiki/File:Corrals_work_bench_and_leather_tools_(55340015877).jpg | Public domain (US National Park Service) | Yellowstone National Park |
 | `natural-dye-and-weaving.jpg` | https://stocksnap.io/photo/yarn-thread-9M2UOGJ5XN | CC0 | Giulia Bertelli |
-| theme `assets/images/hero.jpg` | https://stocksnap.io/photo/dried-poppy-VSEF7T5992 | CC0 | Vintage RS |
-| theme `assets/images/hero-accent.jpg` | https://stocksnap.io/photo/candle-jar-SHPHVPLC7T | CC0 | Burst |
-| theme `assets/images/studio.jpg` | https://stocksnap.io/photo/ceramics-pottery-SWDR6XR7YS | CC0 | Barn Images |
+| theme `assets/images/hero.webp` | https://stocksnap.io/photo/dried-poppy-VSEF7T5992 | CC0 | Vintage RS |
+| theme `assets/images/hero-accent.webp` | https://stocksnap.io/photo/candle-jar-SHPHVPLC7T | CC0 | Burst |
+| theme `assets/images/studio.webp` | https://stocksnap.io/photo/ceramics-pottery-SWDR6XR7YS | CC0 | Barn Images |
